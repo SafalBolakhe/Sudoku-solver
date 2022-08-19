@@ -70,6 +70,11 @@ int main(void)
         }
         g++;
     }
+    if (g == 0)
+    {
+        printf("this sudoku sucks and has no solution");
+        return 0;
+    }
 
     for (int k = 0; k < 9; k++)
     {

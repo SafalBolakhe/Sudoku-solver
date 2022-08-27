@@ -17,7 +17,7 @@ int main(void)
     int sudoku_matrix[9][9], empty_cell_list[90][2];
     char h;
     FILE *fp, *fd;
-    fp = fopen("ptest.txt", "r");
+    fp = fopen("test.txt", "r");
     fd = fopen("result.txt", "w");
     if (fp == NULL)
     {

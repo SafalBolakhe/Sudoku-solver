@@ -3,13 +3,13 @@
 #include <ctype.h>
 #include <stdbool.h>
 
-int solver(int fmat[9][9], int driver_value, int temp_value, int empty_cell_list[driver_value][2]);
-bool checker(int fmat[9][9], int temp_row, int temp_col, int ans);
-int looper(int i, int j, int answer, int fmat[9][9], int row, int column);
+int solver(int main_matrix[9][9], int driver_value, int temp_value, int empty_cell_list[driver_value][2]);
+bool checker(int main_matrix[9][9], int temp_row, int temp_col, int ans);
+int looper(int i, int j, int answer, int main_matrix[9][9], int row, int column);
 
-bool box(int answer, int fmat[9][9], int row, int column);
-bool horizontal(int answer, int fmat[9][9], int row);
-bool vertical(int answer, int fmat[9][9], int column);
+bool box(int answer, int main_matrix[9][9], int row, int column);
+bool horizontal(int answer, int main_matrix[9][9], int row);
+bool vertical(int answer, int main_matrix[9][9], int column);
 
 int main(void)
 {
@@ -99,7 +99,7 @@ int main(void)
 
 // other functions start here
 
-int solver(int fmat[9][9], int driver_value, int temp_value, int empty_cell_list[driver_value][2])
+int solver(int main_matrix[9][9], int driver_value, int temp_value, int empty_cell_list[driver_value][2])
 {
     int temp_row = empty_cell_list[driver_value][0];
     int temp_col = empty_cell_list[driver_value][1];
@@ -107,7 +107,7 @@ int solver(int fmat[9][9], int driver_value, int temp_value, int empty_cell_list
     {
         // printf("here");
         // this part checks if the value is valid, if it is, then it is added to the empty cell
-        if (checker(fmat, temp_row, temp_col, temp_value))
+        if (checker(main_matrix, temp_row, temp_col, temp_value))
         {
             return temp_value;
         }
@@ -119,17 +119,17 @@ int solver(int fmat[9][9], int driver_value, int temp_value, int empty_cell_list
     return 0;
 }
 // this is a function that checks the validity of a value in the given cell
-bool checker(int fmat[9][9], int temp_row, int temp_col, int ans)
+bool checker(int main_matrix[9][9], int temp_row, int temp_col, int ans)
 {
     int answer = ans;
-    if (box(answer, fmat, temp_row, temp_col) && horizontal(answer, fmat, temp_row) && vertical(answer, fmat, temp_col))
+    if (box(answer, main_matrix, temp_row, temp_col) && horizontal(answer, main_matrix, temp_row) && vertical(answer, main_matrix, temp_col))
     {
         return true;
     }
     return false;
 }
 // this is a function that checks the validity of a value in the given cell according to the 3*3 box
-bool box(int answer, int fmat[9][9], int row, int column)
+bool box(int answer, int main_matrix[9][9], int row, int column)
 {
     // these conditions are checking for the position of the values returned to figure out in which box they lie
     if (row <= 2)
@@ -137,15 +137,15 @@ bool box(int answer, int fmat[9][9], int row, int column)
         // printf("0-2\n");
         if (column <= 2)
         {
-            return (looper(0, 0, answer, fmat, 3, 3));
+            return (looper(0, 0, answer, main_matrix, 3, 3));
         }
         else if (column >= 3 && column <= 5)
         {
-            return (looper(0, 3, answer, fmat, 3, 6));
+            return (looper(0, 3, answer, main_matrix, 3, 6));
         }
         else if (column >= 5 && column <= 8)
         {
-            return (looper(0, 6, answer, fmat, 3, 9));
+            return (looper(0, 6, answer, main_matrix, 3, 9));
         }
     }
     else if (3 <= row && row <= 5)
@@ -154,15 +154,15 @@ bool box(int answer, int fmat[9][9], int row, int column)
 
         if (column <= 2)
         {
-            return (looper(3, 0, answer, fmat, 6, 3));
+            return (looper(3, 0, answer, main_matrix, 6, 3));
         }
         else if (column >= 2 && column <= 5)
         {
-            return (looper(3, 3, answer, fmat, 6, 6));
+            return (looper(3, 3, answer, main_matrix, 6, 6));
         }
         else if (column >= 6 && column <= 8)
         {
-            return (looper(3, 6, answer, fmat, 6, 9));
+            return (looper(3, 6, answer, main_matrix, 6, 9));
         }
     }
     else if (5 <= row && row <= 8)
@@ -171,15 +171,15 @@ bool box(int answer, int fmat[9][9], int row, int column)
 
         if (column <= 2)
         {
-            return (looper(6, 0, answer, fmat, 9, 3));
+            return (looper(6, 0, answer, main_matrix, 9, 3));
         }
         else if (2 <= column && column <= 5)
         {
-            return (looper(6, 3, answer, fmat, 9, 6));
+            return (looper(6, 3, answer, main_matrix, 9, 6));
         }
         else if (5 <= column && column <= 8)
         {
-            return (looper(6, 6, answer, fmat, 9, 9));
+            return (looper(6, 6, answer, main_matrix, 9, 9));
         }
     }
 }
@@ -201,24 +201,24 @@ int looper(int i, int j, int answer, int qmat[9][9], int row, int column)
     return true;
 }
 // this part checks for the horizontal validity of the sudoku
-bool horizontal(int answer, int fmat[9][9], int row)
+bool horizontal(int answer, int main_matrix[9][9], int row)
 {
     for (int i = 0; i < 9; i++)
     {
-        if (fmat[row][i] == answer)
+        if (main_matrix[row][i] == answer)
         {
-            // printf("%i h\n", fmat[row][i]);
+            // printf("%i h\n", main_matrix[row][i]);
             return false;
         }
     }
     return true;
 }
 // this part checks for the vertical validity of the sudoku
-bool vertical(int answer, int fmat[9][9], int column)
+bool vertical(int answer, int main_matrix[9][9], int column)
 {
     for (int i = 0; i < 9; i++)
     {
-        if (fmat[i][column] == answer)
+        if (main_matrix[i][column] == answer)
         {
             return false;
         }

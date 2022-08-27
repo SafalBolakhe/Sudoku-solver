@@ -17,7 +17,7 @@ int main(void)
     int sudoku_matrix[9][9], empty_cell_list[90][2];
     char h;
     FILE *fp, *fd;
-    fp = fopen("test.txt", "r");
+    fp = fopen("ptest.txt", "r");
     fd = fopen("result.txt", "w");
     if (fp == NULL)
     {
@@ -74,12 +74,6 @@ int main(void)
             while (sudoku_matrix[temp_row][temp_col] == 0)
             {
                 driver_value--;
-                if (driver_value == 0)
-                {
-                    // if the driver_value reaches 0, then there is no solution to the given sudoku
-                    printf("This sudoku sucks and has no solution");
-                    return 0;
-                }
                 temp_row = empty_cell_list[driver_value][0];
                 temp_col = empty_cell_list[driver_value][1];
                 temp_value = sudoku_matrix[temp_row][temp_col];

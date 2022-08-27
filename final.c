@@ -21,7 +21,7 @@ int main(void)
     fd = fopen("result.txt", "w");
     if (fp == NULL)
     {
-        //this part handles if the file is not available
+        // this part handles if the file is not available
         printf("Please create a file called test.txt with the sudoku to solve");
     }
     else
@@ -41,7 +41,7 @@ int main(void)
                 }
             }
         }
-        // here the driver_value keeps track of empty cells on the sudoku to solve later. It is stored in sets of two. 
+        // here the driver_value keeps track of empty cells on the sudoku to solve later. It is stored in sets of two.
         // for example, when driver_value == 0, it stores two values in places (0,0), and (0, 1). this is the location of the empty cells
         driver_value = 0;
         for (int k = 0; k < 9; k++)
@@ -62,28 +62,33 @@ int main(void)
         int counter = driver_value;
         int temp_row, temp_col, temp_value;
         driver_value = 0;
-        while (driver_value < counter || driver_value == 0)
+        // initially, the program goes to the first empty cell ie driver_value==0, then adds the appropriate value in the cell after which driver_cell++
+        while (driver_value < counter)
         {
             temp_row = empty_cell_list[driver_value][0];
             temp_col = empty_cell_list[driver_value][1];
             temp_value = 1;
             sudoku_matrix[temp_row][temp_col] = solver(sudoku_matrix, driver_value, temp_value, empty_cell_list);
+            // but we may encounter a condition in which no values from 1 to 9 may be suitable,
+            //  in this case, we backtrack which is what the below chunk does
             while (sudoku_matrix[temp_row][temp_col] == 0)
             {
                 driver_value--;
+                if (driver_value == 0)
+                {
+                    // if the driver_value reaches 0, then there is no solution to the given sudoku
+                    printf("This sudoku sucks and has no solution");
+                    return 0;
+                }
                 temp_row = empty_cell_list[driver_value][0];
                 temp_col = empty_cell_list[driver_value][1];
                 temp_value = sudoku_matrix[temp_row][temp_col];
                 sudoku_matrix[temp_row][temp_col] = solver(sudoku_matrix, driver_value, temp_value, empty_cell_list);
             }
+            // proceed to the next empty cell if solution is found
             driver_value++;
         }
-        if (driver_value == 0)
-        {
-            printf("this sudoku sucks and has no solution");
-            return 0;
-        }
-
+        // print the solved sudoku into a file
         for (int k = 0; k < 9; k++)
         {
             for (int l = 0; l < 9; l++)
@@ -92,7 +97,6 @@ int main(void)
             }
             fprintf(fd, "\n");
         }
-        // system("cd /home/safalbolakhe/Desktop/C/Final Sudoku/");
         fclose(fp);
         fclose(fd);
         system("kate result.txt");
@@ -108,6 +112,7 @@ int solver(int fmat[9][9], int driver_value, int temp_value, int empty_cell_list
     while (temp_value <= 9)
     {
         // printf("here");
+        // this part checks if the value is valid, if it is, then it is added to the empty cell
         if (checker(fmat, temp_row, temp_col, temp_value))
         {
             return temp_value;
@@ -118,18 +123,8 @@ int solver(int fmat[9][9], int driver_value, int temp_value, int empty_cell_list
         }
     }
     return 0;
-    // while (answer <= 9)
-    // {
-    //     if (box(answer, fmat, temp_row, temp_col) && horizontal(answer, fmat, temp_row) && vertical(answer, fmat, temp_col))
-    //     {
-    //         return answer;
-    //     }
-    //     else
-    //     {
-    //         answer++;
-    //     }
-    // }
 }
+// this is a function that checks the validity of a value in the given cell
 bool checker(int fmat[9][9], int temp_row, int temp_col, int ans)
 {
     int answer = ans;
@@ -139,8 +134,10 @@ bool checker(int fmat[9][9], int temp_row, int temp_col, int ans)
     }
     return false;
 }
+// this is a function that checks the validity of a value in the given cell according to the 3*3 box
 bool box(int answer, int fmat[9][9], int row, int column)
 {
+    // these conditions are checking for the position of the values returned to figure out in which box they lie
     if (row <= 2)
     {
         // printf("0-2\n");
@@ -192,6 +189,8 @@ bool box(int answer, int fmat[9][9], int row, int column)
         }
     }
 }
+// this is the actual brains of the previous function. After the position gets finalized in the previous function, 
+// this part loops through the concerned box to validate the value
 int looper(int i, int j, int answer, int qmat[9][9], int row, int column)
 {
     for (int f = i; f < row; f++)
@@ -207,7 +206,7 @@ int looper(int i, int j, int answer, int qmat[9][9], int row, int column)
     }
     return true;
 }
-
+// this part checks for the horizontal validity of the sudoku
 bool horizontal(int answer, int fmat[9][9], int row)
 {
     for (int i = 0; i < 9; i++)
@@ -220,6 +219,7 @@ bool horizontal(int answer, int fmat[9][9], int row)
     }
     return true;
 }
+// this part checks for the vertical validity of the sudoku
 bool vertical(int answer, int fmat[9][9], int column)
 {
     for (int i = 0; i < 9; i++)

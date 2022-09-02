@@ -122,7 +122,8 @@ int solver(int main_matrix[9][9], int driver_value, int temp_value, int empty_ce
 bool checker(int main_matrix[9][9], int temp_row, int temp_col, int ans)
 {
     int answer = ans;
-    if (box(answer, main_matrix, temp_row, temp_col) && horizontal(answer, main_matrix, temp_row) && vertical(answer, main_matrix, temp_col))
+    if (box(answer, main_matrix, temp_row, temp_col) && horizontal(answer, main_matrix, temp_row)
+        && vertical(answer, main_matrix, temp_col))
     {
         return true;
     }
@@ -183,7 +184,7 @@ bool box(int answer, int main_matrix[9][9], int row, int column)
         }
     }
 }
-// this is the actual brains of the previous function. After the position gets finalized in the previous function, 
+// this is the actual brains of the previous function. After the position gets finalized in the previous function,
 // this part loops through the concerned box to validate the value
 int looper(int i, int j, int answer, int qmat[9][9], int row, int column)
 {
